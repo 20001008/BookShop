@@ -12,15 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="For The Security of you account,you need to check the verification code for this login \nDrag the lower slider to complete the puzzle" />
+
     <com.bookshop.view.yzmview
+        android:id="@+id/yzm_yzmview"
         android:layout_width="match_parent"
-        android:layout_height="500dp"/>
+        android:layout_height="500dp" />
 
     <SeekBar
         android:thumbOffset="15dp"
         android:background="@android:color/transparent"
         android:thumb="@drawable/mythumb"
-        android:id="@+id/seekBar"
+        android:id="@+id/yzm_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>

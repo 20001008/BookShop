@@ -13,6 +13,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -32,6 +33,9 @@ public class yzmview extends View {
     private Paint smallPaint;
     private int small_size=200;
     private int shadowLeft;
+    private int random_x;
+    private int random_y;
+    private int leftsrc=0;
 
     public yzmview(Context context) {
         super(context);
@@ -43,10 +47,13 @@ public class yzmview extends View {
         srcPaint=new Paint();
         srcPaint.setAntiAlias(true);
         srcPaint.setFilterBitmap(true);
-        srcPaint.setColor(Color.WHITE);
+        srcPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        //srcPaint.setColor(Color.WHITE);
         emptyPaint=new Paint();
         emptyPaint.setAntiAlias(true);
-        emptyPaint.setColor(Color.parseColor("#AA000000"));
+        emptyPaint.setStyle(Paint.Style.STROKE);
+        emptyPaint.setColor(Color.RED);
+        emptyPaint.setStrokeWidth(20);
 
         loadbitmap();
     }
@@ -66,6 +73,10 @@ public class yzmview extends View {
             float scale=width/(float)srcbitmap.getWidth();
             height=(int)(srcbitmap.getHeight()*scale);
             setMeasuredDimension(width,height);
+            //给随机的xy
+            Random random=new Random();
+            random_x=random.nextInt(width/2-width/4)+width/2;
+            random_y=random.nextInt(height/2-height/4)+height/2;
         }
 
 
@@ -75,9 +86,17 @@ public class yzmview extends View {
     protected void onDraw(Canvas canvas) {
 
         RectF rectF = new RectF(0, 0, width, height);
-        RectF rectF2 = new RectF(0, 0, 400, 400);
-        canvas.drawBitmap(srcbitmap, null, rectF,srcPaint );
-        canvas.drawBitmap(kqbitmap,0,0,emptyPaint);
+        RectF rectF1=new RectF(leftsrc,0,leftsrc+small_size,small_size);
+        Log.d("TAG", "onDraw: "+leftsrc);
+      canvas.drawBitmap(srcbitmap, null, rectF,srcPaint );
+        if (random_x>0&&random_y>0)
+        {
+           // canvas.drawBitmap(kqbitmap,null,small_rectF,srcPaint);
+           canvas.drawBitmap(kqbitmap,null,rectF1,srcPaint);
+
+
+        }
+
     }
     private int getmeasuresize(int defultsize, int measuresize)
     {
@@ -101,6 +120,7 @@ public class yzmview extends View {
         {
             srcbitmap= BitmapFactory.decodeResource(getResources(), res);
            kqbitmap=createSmallBitmap(srcbitmap);
+
         }
     }
     private Bitmap clipBitmap(Bitmap bitmap,int newwidth,int newheight){
@@ -119,21 +139,21 @@ public class yzmview extends View {
     public Bitmap createSmallBitmap(Bitmap var) {
         Bitmap bitmap = Bitmap.createBitmap(small_size, small_size, Bitmap.Config.ARGB_8888);
         Canvas canvas1 = new Canvas(bitmap);
-        canvas1.drawCircle(small_size / 2, small_size / 2, small_size / 2, srcPaint);
-       // canvas1.drawRect(0,0,small_size,small_size,srcPaint);
+        //canvas1.drawCircle(small_size / 2, small_size / 2, small_size / 2, srcPaint);
+        canvas1.drawRect(0,0,small_size,small_size,srcPaint);
         /*设置混合模式*/
-        //srcPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        srcPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        Rect rect=new Rect(random_x,(random_y-small_size)/2,small_size,(random_y+small_size)/2);
+        RectF rectF=new RectF(0,0,small_size,small_size);
+       canvas1.drawBitmap(var,rect,rectF, srcPaint);
+       // canvas1.drawBitmap(var,random_x,random_y,srcPaint);
 
-
-        /*在指定范围随机生成空缺部分坐标，保证空缺部分出现在View右侧*/
-        int min = width / 3;
-        int max = width - small_size / 2 - 20;
-        Random random = new Random();
-        shadowLeft = 0;
-        Rect rect = new Rect(shadowLeft, (height - small_size) / 2, small_size + shadowLeft, (height + small_size) / 2);
-        RectF rectF = new RectF(0, 0, small_size, small_size);
-       // canvas1.drawBitmap(var, rect, rectF, srcPaint);
-        //srcPaint.setXfermode(null);
+        srcPaint.setXfermode(null);
         return bitmap;
+    }
+
+    public void setLeftsrc(int leftsrc) {
+        this.leftsrc = leftsrc;
+        invalidate();
     }
 }
