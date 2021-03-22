@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".yzm">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="For The Security of you account,you need to check the verification code for this login \nDrag the lower slider to complete the puzzle" />
+    <com.bookshop.view.yzmview
+        android:layout_width="match_parent"
+        android:layout_height="500dp"/>
+
+    <SeekBar
+        android:thumbOffset="15dp"
+        android:background="@android:color/transparent"
+        android:thumb="@drawable/mythumb"
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
